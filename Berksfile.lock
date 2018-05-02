@@ -1,0 +1,7 @@
+DEPENDENCIES
+  minio-server
+    path: .
+    metadata: true
+
+GRAPH
+  minio-server (0.1.0)

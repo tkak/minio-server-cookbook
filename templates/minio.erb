@@ -1,0 +1,8 @@
+MINIO_VOLUMES="<%= @minio_volumes.join(' ') %>"
+MINIO_OPTS="<%= @minio_opts %>"
+<% if !@minio_access_key.nil? %>
+MINIO_ACCESS_KEY="<%= @minio_access_key %>"
+<% end %>
+<% if !@minio_secret_key.nil? %>
+MINIO_SECRET_KEY="<%= @minio_secret_key %>"
+<% end %>
