@@ -17,5 +17,4 @@ jobs:
       - run:
           name: Run Test-Kitchen
           command: |
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
             KITCHEN_LOCAL_YAML=.kitchen.dokken.yml chef exec kitchen test

@@ -1,5 +1,8 @@
 # minio-server cookbook
 
+[![CircleCI](https://circleci.com/gh/tkak/minio-server-cookbook/tree/master.svg?style=svg)](https://circleci.com/gh/tkak/minio-server-cookbook/tree/master)
+[![Chef cookbook](https://img.shields.io/cookbook/v/minio-server.svg)](https://supermarket.chef.io/cookbooks/minio-server)
+
 Installs minio and sets up configuration.
 
 ## Requirements
