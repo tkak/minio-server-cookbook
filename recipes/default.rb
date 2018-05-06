@@ -26,13 +26,8 @@ template '/etc/default/minio' do
   notifies :restart, 'service[minio]'
 end
 
-file '/etc/systemd/system/minio.service' do
-  content lazy {
-    uri = URI.parse('https://raw.githubusercontent.com/minio/minio-service/master/linux-systemd/minio.service')
-    str = uri.read
-    str = str.gsub(/^User=minio-user/, "User=#{node['minio']['user']}")
-    str.gsub(/^Group=minio-user/, "Group=#{node['minio']['group']}")
-  }
+cookbook_file '/etc/systemd/system/minio.service' do
+  source 'minio.service'
   action :create
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
 end
