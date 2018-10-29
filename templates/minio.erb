@@ -9,3 +9,6 @@ MINIO_SECRET_KEY="<%= @minio_secret_key %>"
 <% if !@minio_domain.nil? %>
 MINIO_DOMAIN="<%= @minio_domain %>"
 <% end %>
+<% if !@minio_browser.nil? %>
+MINIO_BROWSER="<%= @minio_browser %>"
+<% end %>
