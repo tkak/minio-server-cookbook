@@ -30,6 +30,8 @@ The following platforms are supported and tested with Test Kitchen:
 * `node['minio']['secret_key']` - Secret key of the server. Default: `nil`
 * `node['minio']['user']` - User of the server. Default: `root`
 * `node['minio']['group']` - Group of the server. Default: `root`
+* `node['minio']['domain']` - Domain of the server. Default: `nil`
+* `node['minio']['browser']` - Web UI enabled by default. Values: (`on`/`off`)
 
 ## Recipes
 
