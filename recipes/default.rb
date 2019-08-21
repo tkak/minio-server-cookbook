@@ -21,7 +21,9 @@ template '/etc/default/minio' do
     minio_volumes: node['minio']['volumes'],
     minio_opts: node['minio']['opts'],
     minio_access_key: node['minio']['access_key'],
-    minio_secret_key: node['minio']['secret_key']
+    minio_secret_key: node['minio']['secret_key'],
+    minio_domain: node['minio']['domain'],
+    minio_browser: node['minio']['browser']
   )
   notifies :restart, 'service[minio]'
 end
