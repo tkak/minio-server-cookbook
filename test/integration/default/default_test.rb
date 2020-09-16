@@ -10,6 +10,16 @@ describe port(9000) do
   it { should be_listening }
 end
 
+describe file('/usr/local/bin/minio') do
+  it { should exist }
+  its('mode') { should cmp '0755' }
+end
+
+describe file('/etc/default/minio') do
+  it { should exist }
+  its('mode') { should cmp '0644' }
+end
+
 describe service('minio') do
   it { should be_enabled }
   it { should be_running }
