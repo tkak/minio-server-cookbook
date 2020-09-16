@@ -29,16 +29,27 @@ template '/etc/default/minio' do
   notifies :enable, 'service[minio]'
 end
 
-template '/etc/init.d/minio' do
-  source 'minio.conf.erb'
-  mode '0755'
-  only_if do
-    platform_family?('rhel') && node['platform_version'] == '6.10' ||
-      (platform_family?('amazon') && node['platform_version'] == '2018.03')
-  end
-  #notifies :run, 'execute[initctl reload-configuration]', :immediately
-  notifies :start, 'service[minio]'
-end
+# ### delete this part, because of eol centos-6 and amazon linux 1
+# template '/etc/init.d/minio' do
+#   source 'minio.conf.erb'
+#   mode '0755'
+#   only_if do
+#     platform_family?('rhel') && node['platform_version'] == '6.10' ||
+#       (platform_family?('amazon') && node['platform_version'] == '2018.03')
+#   end
+#   #notifies :run, 'execute[initctl reload-configuration]', :immediately
+#   notifies :start, 'service[minio]'
+# end
+
+# ### delete this part, because of eol centos-6 and amazon linux 1
+# execute 'initctl reload-configuration' do
+#   action :nothing
+#   user 'root'
+#   only_if do
+#     platform_family?('rhel') && node['platform_version'] == '6.10' ||
+#       (platform_family?('amazon') && node['platform_version'] == '2018.03')
+#   end
+# end
 
 template '/etc/systemd/system/minio.service' do
   source 'minio.service.erb'
@@ -61,15 +72,6 @@ execute 'systemctl daemon-reload' do
       platform_family?('debian') ||
       platform_family?('suse') ||
       (platform_family?('amazon') && node['platform_version'] == '2')
-  end
-end
-
-execute 'initctl reload-configuration' do
-  action :nothing
-  user 'root'
-  only_if do
-    platform_family?('rhel') && node['platform_version'] == '6.10' ||
-      (platform_family?('amazon') && node['platform_version'] == '2018.03')
   end
 end
 
