@@ -8,6 +8,7 @@ remote_file '/usr/local/bin/minio' do
   source 'https://dl.minio.io/server/minio/release/linux-amd64/minio'
   mode '0755'
   action :create
+  not_if { ::File.exist?('/usr/local/bin/minio') }
 end
 
 directory node['minio']['volume_path'] do
@@ -25,21 +26,56 @@ template '/etc/default/minio' do
     minio_domain: node['minio']['domain'],
     minio_browser: node['minio']['browser']
   )
-  notifies :restart, 'service[minio]'
+  notifies :enable, 'service[minio]'
 end
 
-cookbook_file '/etc/systemd/system/minio.service' do
-  source 'minio.service'
-  action :create
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+# ### delete this part, because of eol centos-6 and amazon linux 1
+# template '/etc/init.d/minio' do
+#   source 'minio.conf.erb'
+#   mode '0755'
+#   only_if do
+#     platform_family?('rhel') && node['platform_version'] == '6.10' ||
+#       (platform_family?('amazon') && node['platform_version'] == '2018.03')
+#   end
+#   #notifies :run, 'execute[initctl reload-configuration]', :immediately
+#   notifies :start, 'service[minio]'
+# end
+
+# ### delete this part, because of eol centos-6 and amazon linux 1
+# execute 'initctl reload-configuration' do
+#   action :nothing
+#   user 'root'
+#   only_if do
+#     platform_family?('rhel') && node['platform_version'] == '6.10' ||
+#       (platform_family?('amazon') && node['platform_version'] == '2018.03')
+#   end
+# end
+
+template '/etc/systemd/system/minio.service' do
+  source 'minio.service.erb'
+  mode '0644'
+  only_if do
+    platform_family?('rhel') && node['platform_version'] != '6.10' ||
+      platform_family?('debian') ||
+      platform_family?('suse') ||
+      (platform_family?('amazon') && node['platform_version'] == '2')
+  end
+  #notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :start, 'service[minio]'
 end
 
 execute 'systemctl daemon-reload' do
   action :nothing
   user 'root'
+  only_if do
+    platform_family?('rhel') && node['platform_version'] != '6.10' ||
+      platform_family?('debian') ||
+      platform_family?('suse') ||
+      (platform_family?('amazon') && node['platform_version'] == '2')
+  end
 end
 
 service 'minio' do
-  provider Chef::Provider::Service::Systemd
-  action [:start, :enable]
+  #provider Chef::Provider::Service::Systemd
+  action :nothing
 end
